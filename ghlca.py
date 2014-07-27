@@ -1,35 +1,20 @@
-
 import subprocess as sp
 import string
 import random
-
 from os import path
-
 from pathlib import Path
 
-print("Hello, world!")
-
 datadir = "~/data/ghlca-repos"
-
-tmppath = '/tmp/ghlca-' + ''.join(random.choice(string.ascii_lowercase) for _ in range(6))
-#tmpfile = open(tmppath, 'w')
-
+#tmppath = '/tmp/ghlca-' + ''.join(random.choice(string.ascii_lowercase) for _ in range(6))
 repospathstr=path.expanduser('~/data/ghlca-repos')
-
 reposp = Path(repospathstr)
+repoabspaths =list(reposp.glob('**/*.git'))
+relamap = lambda x: x.relative_to(reposp)
+strmap = lambda x: str(relamap(x))
 
-repopaths =list(reposp.glob('**/*.git'))
+#repopaths = list(map(lambda x: x.relative_to(reposp), repoabspaths))
+repos = [{"repo": strmap(i), "abspath": i, "relapath": relamap(i)} for i in repoabspaths]
 
-print(dir(repopaths[0]))
+print(repos)
 
 
-
-#repopath='~/data/ghlca-repos/angular/angular.js.git'
-
-#sp.call('git "--git-dir=' + path.expanduser(repopath) + '" branch -a > "' + tmppath + '"', shell=True)
-
-#tmpfile.close()
-#tmpfile = open(tmppath, 'r')
-#print(tmpfile.read())
-#tmpfile.close()
-#sp.call('git --version')
