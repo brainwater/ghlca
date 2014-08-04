@@ -16,12 +16,15 @@ db = mongoclient.ghlca
 wcoll = db["max-watchers-repos"]
 # Repositories with the maximum number of forks
 fcoll = db["max-forks-repos"]
-datadir = "~/data/ghlca/watchers"
-repospathstr=path.expanduser('~/data/ghlca-repos')
-reposp = Path(repospathstr)
-repoabspaths =list(reposp.glob('**/*.git'))
-relamap = lambda x: x.relative_to(reposp)
-strmap = lambda x: str(relamap(x))
-repos = [{"repo": strmap(i), "abspath": i, "relapath": relamap(i)} for i in repoabspaths]
-tmpfilename='/tmp/ghlca-' + ''.join(random.choice(string.ascii_lowercase) for _ in range(16))
+datadir = "~/data/ghlca/repos/wtch"
+filesdir = path.expanduser('~/data/ghlca/files')
+wfilesdir = filesdir + '/wtch'
+ffilesdir = filesdir + '/fork'
+#repospathstr=path.expanduser('~/data/ghlca-repos')
+#reposp = Path(repospathstr)
+#repoabspaths =list(reposp.glob('**/*.git'))
+#relamap = lambda x: x.relative_to(reposp)
+#strmap = lambda x: str(relamap(x))
+#repos = [{"repo": strmap(i), "abspath": i, "relapath": relamap(i)} for i in repoabspaths]
+#tmpfilename='/tmp/ghlca-' + ''.join(random.choice(string.ascii_lowercase) for _ in range(16))
 

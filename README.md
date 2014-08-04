@@ -54,3 +54,14 @@ I used bigquery for listing the most "important" repositories on GitHub. I got l
       b.repository_url = a.repository_url
     ORDER BY repository_value desc
     LIMIT 5000
+## Layout
+Bash scripts are under the 'scripts' directory, python scripts are under the 'python' directory.
+### Python Scripts
+Located under the 'python' directory, there are a few prefixes that indicate what the script is used for.
+The ghlca.py file is the common file with common variables and utilities defined.
+#### 'pop' prefix
+Populates the mongodb with data, and should be idempotent when run twice, and will fill in the missing data when more repos are added.
+#### 'get' prefix
+Indicates that it will look through the data and print out something about it. It should not change anything in the database or otherwise.
+
+

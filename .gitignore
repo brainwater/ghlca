@@ -28,6 +28,7 @@ tramp
 # AUCTeX auto folder
 /auto/
 env/
+python/env/
 
 settings.py
 # Byte-compiled / optimized / DLL files
