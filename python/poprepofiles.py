@@ -15,18 +15,26 @@ def fgen():
 flistfile = fgen()
 infofile = fgen()
 
-def popfilenames(coll, fdir):
-    repos = list(coll.find())
+def popfilenames(repocoll, filescoll, fdir):
+    repos = list(repocoll.find())
     random.shuffle(repos)
     for repo in repos:
         if "repository_full_name" not in repo:
             continue
         reponame = repo["repository_full_name"]
-        if "repository_file_list" in repo:
+        if "repository_files_populated" in repo and repo["repository_files_populated"]:
             continue
         print(reponame)
-        repo["repository_file_list"] = getrepofileinfos(reponame, fdir)
-        coll.save(repo)
+        if "repository_file_list" in repo:
+            print("repository_file_list found, deleting")
+            del repo["repository_file_list"]
+        repofilelist = getrepofileinfos(reponame, fdir)
+        for f in repofilelist:
+            f["_id"] = f["filename"]
+            f["reponame"] = reponame
+            filescoll.save(f)
+        repo["repository_files_populated"] = True
+        repocoll.save(repo)
 
 def getrepofileinfos(reponame, fdir):
     globber = reponame + "/**/*"
@@ -41,5 +49,5 @@ def getrepofileinfos(reponame, fdir):
     return finfos
 
 #print(getrepofileinfos("apache/cassandra", ghlca.wfilesdir))
-popfilenames(ghlca.wcoll, ghlca.wfilesdir)
+popfilenames(ghlca.wcoll, ghlca.wfcoll, ghlca.wfilesdir)
 

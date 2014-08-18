@@ -12,6 +12,10 @@ import random
 
 mongoclient = pm.MongoClient('localhost', 27017)
 db = mongoclient.ghlca
+# List of files collection
+wfcoll = pm.collection.Collection(db, "files-wtch")
+#wwccoll = pm.collection.Collection(db, "wtchwordcounts")
+wwccoll = pm.collection.Collection(db, "wtchwordcountsnogenven")
 # Collection of repositories with the maximum number of watchers
 wcoll = db["max-watchers-repos"]
 # Repositories with the maximum number of forks
