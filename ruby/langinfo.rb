@@ -5,13 +5,32 @@ require 'linguist'
 require 'json'
 
 def getFileInfo(f)
-  fblob = Linguist::FileBlob.new(f.chomp)
-  info = {}
-  lang = fblob.language
-  if lang.nil?
-    info = { "filename" => f.chomp, "vendored" => fblob.vendored?, "generated" => fblob.generated? }
-  else
-    info = { "filename" => f.chomp, "language" => lang.name, "sloc" => fblob.sloc, "loc" => fblob.loc, "vendored" => fblob.vendored?, "generated" => fblob.generated? }
+  filename = f.chomp
+  fblob = Linguist::FileBlob.new(filename)
+  info = { "filename" => filename }
+  begin
+    lang = fblob.language
+  rescue ArgumentError
+    lang = nil
+  end
+  begin
+    info["vendored"] = fblob.vendored?
+  rescue ArgumentError
+  end
+  begin
+    info["generated"] = fblob.generated?
+  rescue ArgumentError
+  end
+  if not lang.nil?
+    info["language"] = lang.name
+    begin
+      info["sloc"] = fblob.sloc
+    rescue ArgumentError
+    end
+    begin
+      info["loc"] = fblob.loc
+    rescue ArgumentError
+    end
   end
   info
 end

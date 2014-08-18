@@ -4,16 +4,26 @@ import re
 import sys
 import json
 import subprocess
+import random
+import string
 
+def fgen():
+    return '/tmp/ghlca-popreposfiles-' + ''.join(random.choice(string.ascii_lowercase) for _ in range(10))
 
-flistfile = "/tmp/ghlca-file-list.txt"
-infofile = "/tmp/ghlca-lang-info.txt"
+#flistfile = "/tmp/ghlca-file-list.txt"
+#infofile = "/tmp/ghlca-lang-info.txt"
+flistfile = fgen()
+infofile = fgen()
 
 def popfilenames(coll, fdir):
-    for repo in coll.find():
+    repos = list(coll.find())
+    random.shuffle(repos)
+    for repo in repos:
         if "repository_full_name" not in repo:
             continue
         reponame = repo["repository_full_name"]
+        if "repository_file_list" in repo:
+            continue
         print(reponame)
         repo["repository_file_list"] = getrepofileinfos(reponame, fdir)
         coll.save(repo)
