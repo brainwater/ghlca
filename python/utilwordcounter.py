@@ -2,9 +2,11 @@ from collections import Counter
 import re
 
 class WordCounter:
-    wordcountwhitespace = Counter()
-    wordcountwordchars = Counter()
-    charcount = Counter()
+    def __init__(self):
+        self.wordcountwhitespace = Counter()
+        self.wordcountwordchars = Counter()
+        self.charcount = Counter()
+        
     def update(self, text):
         self.charcount.update(text)
         self.wordcountwhitespace.update(text.split())
