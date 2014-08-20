@@ -5,7 +5,9 @@ import sys
 import json
 
 def wcforlang(fcoll, lang=None):
+    fnamefile = open("/tmp/ghlca-file-names-pop-wordcount.txt", "w+")
     cntr = 0
+    failcntr = 0
     wc = WordCounter()
     for f in fcoll.find():
         if "language" not in f:
@@ -17,26 +19,26 @@ def wcforlang(fcoll, lang=None):
         if lang == None or not f["language"] == lang:
             continue
         fnamefile.write(f["filename"] + "\n")
-        cntr += 1
         with open(f["filename"], "r") as thefile:
             try:
                 wc.update(thefile.read())
+                cntr += 1
             except UnicodeDecodeError:
                 print("UnicodeDedcodeError on file " + f["filename"])
+                failcntr += 1
         if cntr % 10000 == 0:
             print(cntr)
-    return wc, cntr
+    return wc, cntr, failcntr
 
 
 
-def getwordcounts(fcoll):
-    #fnamefile = open("/tmp/ghlca-file-names-pop-wordcount.txt", "w+")
+def popwordcounts(fcoll):
     langfile = open("data/language-list.json", "r")
     languages = json.load(langfile)
     for lang in languages:
         print("Language " + lang)
-        wclang, fcount = wcforlang(fcoll, lang)
-        prefix = "wordcounts_wtch_2_lang_"
+        wclang, fcount, failcount = wcforlang(fcoll, lang)
+        prefix = "wordcounts_wtch_3_lang_"
         langcollchar = pymongo.collection.Collection(ghlca.db, prefix + "char_" + lang)
         langcollword = pymongo.collection.Collection(ghlca.db, prefix + "word_" + lang)
         langcollwhite = pymongo.collection.Collection(ghlca.db, prefix + "white_" + lang)
@@ -49,11 +51,12 @@ def getwordcounts(fcoll):
         totchars = sum(wclang.charcount.values())
         totwords = sum(wclang.wordcountwordchars.values())
         totwhites = sum(wclang.wordcountwordchars.values())
-        ghlca.langcoll.save({"_id": lang, "language": lang, "filecount": fcount, "charcount": totchars, "wordcount": totwords, "whitecount": totwhites})
+        ghlca.langcoll.save({"_id": lang, "language": lang, "filecount": fcount, "charcount": totchars, "wordcount": totwords, "whitecount": totwhites, "failcount": failcount})
         print("Wrote language " + lang)
     print("Starting on total")
-    wc, fcount = wcforlang(fcoll)
-    prefix = "wordcounts_total_2_"
+    wc, fcount, failcount = wcforlang(fcoll)
+    lang = "All Languages"
+    prefix = "wordcounts_total_3_"
     collchar = pymongo.collection.Collection(ghlca.db, prefix + "char")
     collword = pymongo.collection.Collection(ghlca.db, prefix + "word")
     collwhite = pymongo.collection.Collection(ghlca.db, prefix + "white")
@@ -63,54 +66,11 @@ def getwordcounts(fcoll):
         collword.save({ "w": word, "c": count })
     for word, count in wclang.wordcountwhitespace.most_common(100000):
         collwhite.save({ "w": word, "c": count })
+    totchars = sum(wc.charcount.values())
+    totwords = sum(wc.wordcountwordchars.values())
+    totwhites = sum(wc.wordcountwordchars.values())
+    ghlca.langcoll.save({"_id": lang, "language": lang, "filecount": fcount, "charcount": totchars, "wordcount": totwords, "whitecount": totwhites, "failcount": failcount})
     print("Done with total")
-    
-    
-            
-            
-            
-    for f in fcoll.find():
-        if "language" not in f:
-            continue
-        if "vendored" in f and f["vendored"]:
-            continue
-        if "generated" in f and f["generated"]:
-            continue
-        fnamefile.write(f["filename"] + "\n")
-        if f["language"] not in wc:
-            wc[f["language"]] = WordCounter()
-        with open(f["filename"], "r") as thefile:
-            try:
-                text = thefile.read()
-                wctot.update(text)
-                wc[f["language"]].update(text)
-            except UnicodeDecodeError:
-                print("UnicodeDedcodeError on file " + f["filename"])
-        if cntr % 1000 == 0:
-            print(cntr)
-            sys.stdout.flush()
-        cntr += 1
-    return wctot, wc
-
-def popwordcounts(fcoll):
-    wctotals, wordcounts = getwordcounts(fcoll)
-    print("Done calculating, storing")
-    for lang, wordcount in wordcounts.items():
-        print("Storing language " + lang)
-        
-    totalcollchar = pymongo.collection.Collection(ghlca.db, "wordcounts_wtch_2_total_char")
-    totalcollword = pymongo.collection.Collection(ghlca.db, "wordcounts_wtch_2_total_word")
-    print("Storing whitespace delimited word counts")
-    totalcollwhite = pymongo.collection.Collection(ghlca.db, "wordcounts_wtch_2_total_white")
-    for word, count in wctotals.charcount.most_common(100000):
-        totalcollchar.save({ "w": word, "c": count })
-    print("Storing word character word counts")
-    for word, count in wctotals.wordcountwordchars.most_common(100000):
-        totalcollword.save({ "w": word, "c": count })
-    print("Done with languages, storing chars")
-    for word, count in wctotals.wordcountwhitespace.most_common(100000):
-        totalcollwhite.save({ "w": word, "c": count })
-    print("Done with everything")
 
 
 popwordcounts(ghlca.wfcoll)
