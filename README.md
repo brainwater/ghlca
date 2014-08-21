@@ -65,3 +65,9 @@ Populates the mongodb with data, and should be idempotent when run twice, and wi
 Indicates that it will look through the data and print out something about it. It should not change anything in the database or otherwise.
 
 
+## Misc
+
+### Segmentation Fault
+When doing popwordcounts.py on the PAWN language on the /home/blake/data/ghlca/files/wtch/github/linguist/samples/PAWN/grandlarc.pwn file it wigged out and had a segfault. On commit f634313
+
+

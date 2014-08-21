@@ -38,7 +38,7 @@ def popwordcounts(fcoll):
     for lang in languages:
         print("Language " + lang)
         wclang, fcount, failcount = wcforlang(fcoll, lang)
-        prefix = "wordcounts_wtch_5_lang_"
+        prefix = "wordcounts_wtch_7_lang_"
         langcollchar = pymongo.collection.Collection(ghlca.db, prefix + "char_" + lang)
         langcollword = pymongo.collection.Collection(ghlca.db, prefix + "word_" + lang)
         langcollwhite = pymongo.collection.Collection(ghlca.db, prefix + "white_" + lang)
@@ -56,7 +56,7 @@ def popwordcounts(fcoll):
     print("Starting on total")
     wc, fcount, failcount = wcforlang(fcoll)
     lang = "All Languages"
-    prefix = "wordcounts_wtch_5_total_"
+    prefix = "wordcounts_wtch_7_total_"
     collchar = pymongo.collection.Collection(ghlca.db, prefix + "char")
     collword = pymongo.collection.Collection(ghlca.db, prefix + "word")
     collwhite = pymongo.collection.Collection(ghlca.db, prefix + "white")
