@@ -1,61 +1,19 @@
 import ghlca
-from pathlib import Path
 from collections import Counter
-import hashlib
-import re
 
-wcounter = Counter()
-scount = Counter()
-ccount = Counter()
-filehashes = []
+def getwordcountforcoll(coll):
+    return Counter({item["w"]: item["c"] for item in coll.find()})
 
-def wcofrepo(reponame, fdir):
-    print(reponame)
-    globber = reponame + "/**/*.java"
-    #print(globber)
-    paths = Path(fdir + "/").glob(globber)
-    #Path(fdir + "/").glob(reponame + '/**')
-    #print(list(paths))
-    #print(list(paths))
+#print(ghlca.db.collection_names())
+#for i in ghlca.db:
+#    print(i)
+wctotchar = getwordcountforcoll(ghlca.db.wordcounts_wtch_4_lang_char_Haskell)
+print(wctotchar.most_common(100))
+wctotchar = getwordcountforcoll(ghlca.db["wordcounts_wtch_4_total_char"])
+print(wctotchar.most_common(100))
+#wctotword = getwordcountforcoll(ghlca.db.wordcounts_wtch_total_word)
+#print(wctotword.most_common(100))
+#wctotwhite = getwordcountforcoll(ghlca.db.wordcounts_wtch_total_white)
+#print(wctotwhite.most_common(100))
 
-    try:
-        for path in paths:
-            #print(path)
-            if not str(path).endswith(".java"):
-                continue
-            f = open(str(path), encoding="utf-8")
-            fstr = f.read()
-            hs = hashlib.md5(fstr.encode(encoding="utf-8")).hexdigest()
-            #print(path)
-            filehashes.append(hs)
-            ccount.update(fstr)
-            wcounter.update(re.split("[\W]+", fstr))
-            scount.update(fstr.split())
-            #print(wcounter.most_common(100))
 
-            f.close()
-    except:
-        print("Exception")
-    #    for path in paths:
-    #        f = open(path)
-
-def totalwc(coll, fdir):
-    for repo in coll.find():
-        if 'repository_full_name' in repo:
-            reponame = repo['repository_full_name']
-            wcofrepo(reponame, fdir)
-                
-totalwc(ghlca.wcoll, ghlca.wfilesdir)
-#wcofrepo("apache/cassandra", ghlca.wfilesdir)
-
-print(wcounter.most_common(100))
-print(scount.most_common(100))
-print(Counter(filehashes).most_common(50))
-mc = ccount.most_common(100)
-for i in mc:
-    try:
-        print(i)
-    except:
-        pass
-
-# wcofrepo(, ghlca.wfilesdir)

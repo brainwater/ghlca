@@ -38,7 +38,7 @@ def popwordcounts(fcoll):
     for lang in languages:
         print("Language " + lang)
         wclang, fcount, failcount = wcforlang(fcoll, lang)
-        prefix = "wordcounts_wtch_4_lang_"
+        prefix = "wordcounts_wtch_5_lang_"
         langcollchar = pymongo.collection.Collection(ghlca.db, prefix + "char_" + lang)
         langcollword = pymongo.collection.Collection(ghlca.db, prefix + "word_" + lang)
         langcollwhite = pymongo.collection.Collection(ghlca.db, prefix + "white_" + lang)
@@ -50,13 +50,13 @@ def popwordcounts(fcoll):
             langcollwhite.save({ "w": word, "c": count })
         totchars = sum(wclang.charcount.values())
         totwords = sum(wclang.wordcountwordchars.values())
-        totwhites = sum(wclang.wordcountwordchars.values())
+        totwhites = sum(wclang.wordcountwhitespace.values())
         ghlca.langcoll.save({"_id": lang, "language": lang, "filecount": fcount, "charcount": totchars, "wordcount": totwords, "whitecount": totwhites, "failcount": failcount})
         print("Wrote language " + lang)
     print("Starting on total")
     wc, fcount, failcount = wcforlang(fcoll)
     lang = "All Languages"
-    prefix = "wordcounts_wtch_4_total_"
+    prefix = "wordcounts_wtch_5_total_"
     collchar = pymongo.collection.Collection(ghlca.db, prefix + "char")
     collword = pymongo.collection.Collection(ghlca.db, prefix + "word")
     collwhite = pymongo.collection.Collection(ghlca.db, prefix + "white")
@@ -68,7 +68,7 @@ def popwordcounts(fcoll):
         collwhite.save({ "w": word, "c": count })
     totchars = sum(wc.charcount.values())
     totwords = sum(wc.wordcountwordchars.values())
-    totwhites = sum(wc.wordcountwordchars.values())
+    totwhites = sum(wc.wordcountwhitespace.values())
     ghlca.langcoll.save({"_id": lang, "language": lang, "filecount": fcount, "charcount": totchars, "wordcount": totwords, "whitecount": totwhites, "failcount": failcount})
     print("Done with total")
 
