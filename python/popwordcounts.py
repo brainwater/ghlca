@@ -20,8 +20,10 @@ def wcforlang(fcoll, lang=None):
             continue
         if (not (lang == None)) and (not (f["language"] == lang)):
             continue
-        sloccnt += f["sloc"]
-        loccnt += f["loc"]
+        if "sloc" in f:
+            sloccnt += f["sloc"]
+        if "loc" in f:
+            loccnt += f["loc"]
         fnamefile.write(f["filename"] + "\n")
         with open(f["filename"], "r") as thefile:
             try:
