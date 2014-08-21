@@ -7,9 +7,9 @@ def getwordcountforcoll(coll):
 #print(ghlca.db.collection_names())
 #for i in ghlca.db:
 #    print(i)
-wctotchar = getwordcountforcoll(ghlca.db.wordcounts_wtch_lang_char_Haskell)
+wctotchar = getwordcountforcoll(ghlca.db.wordcounts_wtch_4_lang_char_Haskell)
 print(wctotchar.most_common(100))
-wctotchar = getwordcountforcoll(ghlca.db["wordcounts_wtch_total_char"])
+wctotchar = getwordcountforcoll(ghlca.db["wordcounts_wtch_4_total_char"])
 print(wctotchar.most_common(100))
 #wctotword = getwordcountforcoll(ghlca.db.wordcounts_wtch_total_word)
 #print(wctotword.most_common(100))
