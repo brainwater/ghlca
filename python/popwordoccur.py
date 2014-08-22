@@ -1,6 +1,6 @@
 import ghlca
 
-totalprefix = "wordcounts_wtch_5_total_"
+totalprefix = "wordcounts_wtch_7_total_"
 totchar = totalprefix + "char"
 totword = totalprefix + "word"
 totwhite = totalprefix + "whitte"
