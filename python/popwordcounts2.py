@@ -3,6 +3,7 @@ from utilwordcounter import WordCounter
 import pymongo
 import sys
 import json
+import gc
 
 def wcforlang(fcoll, lang=None):
     fnamefile = open("/tmp/ghlca-file-names-pop-wordcount.txt", "w+")
@@ -43,26 +44,53 @@ def popwordcounts(fcoll):
     langfile = open("data/language-list.json", "r")
     print("Starting on total")
     wc, fcount, failcount, sloc, loc = wcforlang(fcoll)
-    print("Saving total chars")
+    print("Garbage collecting")
+    sys.stdout.flush()
+    gc.collect()
+    print("Done garbage collecting")
+    sys.stdout.flush()
+    print("Saving total counts")
+    sys.stdout.flush()
     lang = "All Languages 2"
-    prefix = "wordcounts_wtch_9_total_"
+    prefix = "wordcounts_wtch_10_total_"
     collchar = pymongo.collection.Collection(ghlca.db, prefix + "char")
     collword = pymongo.collection.Collection(ghlca.db, prefix + "word")
     collwhite = pymongo.collection.Collection(ghlca.db, prefix + "white")
-    for word, count in wc.charcount.most_common(10000000):
-        collchar.save({ "_id": word, "w": word, "c": count })
-    print("Saving total words")
-    for word, count in wc.wordcountwordchars.most_common(10000000):
-        collword.save({ "_id": word, "w": word, "c": count })
-    print("Saving total whites")
-    for word, count in wc.wordcountwhitespace.most_common(10000000):
-        collwhite.save({ "_id": word, "w": word, "c": count })
-    print("Done with total whites")
     totchars = sum(wc.charcount.values())
     totwords = sum(wc.wordcountwordchars.values())
     totwhites = sum(wc.wordcountwhitespace.values())
     ghlca.langcoll.save({"_id": lang, "language": lang, "filecount": fcount, "charcount": totchars, "wordcount": totwords, "whitecount": totwhites, "sloc": sloc, "loc": loc, "failcount": failcount})
+    print("Garbage collecting")
+    sys.stdout.flush()
+    gc.collect()
+    print("Done garbage collecting")
+    sys.stdout.flush()
+    print("Done with total counts, saving total chars")
+    sys.stdout.flush()
+    for word, count in wc.charcount.most_common(1000000):
+        collchar.save({ "_id": word, "w": word, "c": count })
+    print("Garbage collecting")
+    sys.stdout.flush()
+    gc.collect()
+    print("Done garbage collecting")
+    sys.stdout.flush()
+    print("Saving total words")
+    sys.stdout.flush()
+    for word, count in wc.wordcountwordchars.most_common(2000000):
+        collword.save({ "_id": word, "w": word, "c": count })
+    print("Garbage collecting")
+    sys.stdout.flush()
+    gc.collect()
+    print("Done garbage collecting")
+    sys.stdout.flush()
+    print("Saving total whites")
+    sys.stdout.flush()
+    for word, count in wc.wordcountwhitespace.most_common(2000000):
+        collwhite.save({ "_id": word, "w": word, "c": count })
+    print("Done with total whites")
+    sys.stdout.flush()
     print("Done with total")
+    sys.stdout.flush()
 
 
 popwordcounts(ghlca.wfcoll)

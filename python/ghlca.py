@@ -42,7 +42,7 @@ langswords = [db[langwordprefix + lang["language"]] for lang in langcoll.find() 
 langswhites = [db[langwhiteprefix + lang["language"]] for lang in langcoll.find() if testifall(lang["language"])]
 
 # Total words collections
-totprefix = "wordcounts_wtch_9_total_"
+totprefix = "wordcounts_wtch_10_total_"
 totalchars = pm.collection.Collection(db, totprefix + "char")
 totalwords = pm.collection.Collection(db, totprefix + "word")
 totalwhites = pm.collection.Collection(db, totprefix + "white")
