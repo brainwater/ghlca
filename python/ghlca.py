@@ -21,7 +21,7 @@ wwccoll = pm.collection.Collection(db, "wtchwordcountsnogenven")
 wcoll = db["max-watchers-repos"]
 # Repositories with the maximum number of forks
 fcoll = db["max-forks-repos"]
-datadir = "~/data/ghlca/repos/wtch"
+datadir = path.expanduser("~/data/ghlca/repos/wtch")
 filesdir = path.expanduser('~/data/ghlca/files')
 wfilesdir = filesdir + '/wtch'
 ffilesdir = filesdir + '/fork'
@@ -54,5 +54,5 @@ totalwhites = pm.collection.Collection(db, totprefix + "white")
 #relamap = lambda x: x.relative_to(reposp)
 #strmap = lambda x: str(relamap(x))
 #repos = [{"repo": strmap(i), "abspath": i, "relapath": relamap(i)} for i in repoabspaths]
-#tmpfilename='/tmp/ghlca-' + ''.join(random.choice(string.ascii_lowercase) for _ in range(16))
+tmpfilename='/tmp/ghlca-' + ''.join(random.choice(string.ascii_lowercase) for _ in range(16))
 
