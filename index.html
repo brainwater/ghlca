@@ -123,12 +123,13 @@ TODO: Insert a link to a file with mismatched parentheses from apache cassandra<
 <h2>
 <a name="repositories-used" class="anchor" href="#repositories-used"><span class="octicon octicon-link"></span></a>Repositories Used</h2>
 
-<p>TODO: Link to a list of the repositories used and the commit hash that they were at when you got them</p>
+<p>I have compiled a list of the repositories used, the commit hash of each repository used, and the branch name <a href="https://github.com/brainwater/ghlca/blob/master/data/repository-list.txt">here</a>. The format is "owner/repository-name commit-hash branch-name", and the repositories can be downloaded at <a href="https://github.com/owner/repository-name">https://github.com/owner/repository-name</a> e.g. <a href="https://github.com/apache/cassandra">https://github.com/apache/cassandra</a>.</p>
 
 <h2>
 <a name="bugs-encountered" class="anchor" href="#bugs-encountered"><span class="octicon octicon-link"></span></a>Bugs Encountered</h2>
 
-<p>I encountered quite a few bugs in the software I was using, from bugs in python, to bugs in the github-linguist library for determining the language of source code files. I will be submitting bug reports for github linguist and will likely do some work on fixing them, since it would be a great way for me to contribute to an open source application in a meaningful way. In python I encountered some segfaults (so far I have had python segfault 3 times) but am unable to reproduce the segfault consistently. I also encountered issues while reading source code files with unicode, since many source files have invalid unicode characters. I would ilke a way to read a file as text, but to be able to either skip the characters that are invalid unicode, or to treat them in some special way. I believe most of these files were for tests, and some of them were for testing what happens on invalid input.</p>
+<p>I encountered quite a few bugs in the software I was using, from bugs in python, to bugs in the github-linguist library for determining the language of source code files. I will be submitting bug reports for github linguist and will likely do some work on fixing them, since it would be a great way for me to contribute to an open source application in a meaningful way. In python I encountered some segfaults (so far I have had python segfault 3 times), mostly while running the popwordcounts.py interactively. I also encountered issues while reading source code files with unicode, since many source files have invalid unicode characters. I would ilke a way to read a file as text, but to be able to either skip the characters that are invalid unicode, or to treat them in some special way. I believe most of these files were for tests, and some of them were for testing what happens on invalid input.
+I will be investigating and reporting the bugs I have encountered in python and github-linguist, and I hope I will go ahead and fix those bugs.</p>
 
 <h2>
 <a name="acknowledgements" class="anchor" href="#acknowledgements"><span class="octicon octicon-link"></span></a>Acknowledgements</h2>
