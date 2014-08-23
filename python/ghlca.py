@@ -41,6 +41,13 @@ langschars = [db[langcharprefix + lang["language"]] for lang in langcoll.find() 
 langswords = [db[langwordprefix + lang["language"]] for lang in langcoll.find() if testifall(lang["language"])]
 langswhites = [db[langwhiteprefix + lang["language"]] for lang in langcoll.find() if testifall(lang["language"])]
 
+# Total words collections
+totprefix = "wordcounts_wtch_9_total_"
+totalchars = pm.collection.Collection(db, totprefix + "char")
+totalwords = pm.collection.Collection(db, totprefix + "word")
+totalwhites = pm.collection.Collection(db, totprefix + "white")
+
+
 #repospathstr=path.expanduser('~/data/ghlca-repos')
 #reposp = Path(repospathstr)
 #repoabspaths =list(reposp.glob('**/*.git'))

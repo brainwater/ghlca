@@ -49,11 +49,11 @@ def popwordcounts(fcoll):
         langcollword = pymongo.collection.Collection(ghlca.db, prefix + "word_" + lang)
         langcollwhite = pymongo.collection.Collection(ghlca.db, prefix + "white_" + lang)
         for word, count in wclang.charcount.most_common(10000):
-            langcollchar.save({ "w": word, "c": count })
+            langcollchar.save({ "_id": word, "w": word, "c": count })
         for word, count in wclang.wordcountwordchars.most_common(10000):
-            langcollword.save({ "w": word, "c": count })
+            langcollword.save({ "_id": word, "w": word, "c": count })
         for word, count in wclang.wordcountwhitespace.most_common(10000):
-            langcollwhite.save({ "w": word, "c": count })
+            langcollwhite.save({ "_id": word, "w": word, "c": count })
         totchars = sum(wclang.charcount.values())
         totwords = sum(wclang.wordcountwordchars.values())
         totwhites = sum(wclang.wordcountwhitespace.values())
@@ -67,11 +67,11 @@ def popwordcounts(fcoll):
     collword = pymongo.collection.Collection(ghlca.db, prefix + "word")
     collwhite = pymongo.collection.Collection(ghlca.db, prefix + "white")
     for word, count in wc.charcount.most_common(10000000):
-        collchar.save({ "w": word, "c": count })
+        collchar.save({ "_id": word, "w": word, "c": count })
     for word, count in wclang.wordcountwordchars.most_common(10000000):
-        collword.save({ "w": word, "c": count })
+        collword.save({ "_id": word, "w": word, "c": count })
     for word, count in wclang.wordcountwhitespace.most_common(10000000):
-        collwhite.save({ "w": word, "c": count })
+        collwhite.save({ "_id": word, "w": word, "c": count })
     totchars = sum(wc.charcount.values())
     totwords = sum(wc.wordcountwordchars.values())
     totwhites = sum(wc.wordcountwhitespace.values())
