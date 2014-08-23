@@ -25,6 +25,22 @@ datadir = "~/data/ghlca/repos/wtch"
 filesdir = path.expanduser('~/data/ghlca/files')
 wfilesdir = filesdir + '/wtch'
 ffilesdir = filesdir + '/fork'
+
+# Language specific collections
+langcoll = db.languages
+
+langprefix = "wordcounts_wtch_7_lang_"
+langcharprefix = langprefix + "char_"
+langwordprefix = langprefix + "word_"
+langwhiteprefix = langprefix + "white_"
+
+def testifall(lang):
+    return (not (lang == "All Languages")) and (not (lang == "All Languages 2"))
+
+langschars = [db[langcharprefix + lang["language"]] for lang in langcoll.find() if testifall(lang["language"])]
+langswords = [db[langwordprefix + lang["language"]] for lang in langcoll.find() if testifall(lang["language"])]
+langswhites = [db[langwhiteprefix + lang["language"]] for lang in langcoll.find() if testifall(lang["language"])]
+
 #repospathstr=path.expanduser('~/data/ghlca-repos')
 #reposp = Path(repospathstr)
 #repoabspaths =list(reposp.glob('**/*.git'))
