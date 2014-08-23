@@ -42,6 +42,7 @@ def popwordcounts(fcoll):
     langfile = open("data/language-list.json", "r")
     print("Starting on total")
     wc, fcount, failcount, sloc, loc = wcforlang(fcoll)
+    print("Saving total chars")
     lang = "All Languages 2"
     prefix = "wordcounts_wtch_8_total_"
     collchar = pymongo.collection.Collection(ghlca.db, prefix + "char")
@@ -49,10 +50,13 @@ def popwordcounts(fcoll):
     collwhite = pymongo.collection.Collection(ghlca.db, prefix + "white")
     for word, count in wclang.charcount.most_common(10000000):
         collchar.save({ "_id": word, "w": word, "c": count })
+    print("Saving total words")
     for word, count in wclang.wordcountwordchars.most_common(10000000):
         collword.save({ "_id": word, "w": word, "c": count })
+    print("Saving total whites")
     for word, count in wclang.wordcountwhitespace.most_common(10000000):
         collwhite.save({ "_id": word, "w": word, "c": count })
+    print("Done with total whites")
     totchars = sum(wc.charcount.values())
     totwords = sum(wc.wordcountwordchars.values())
     totwhites = sum(wc.wordcountwhitespace.values())
