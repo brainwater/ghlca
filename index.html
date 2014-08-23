@@ -1,56 +1,86 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
+
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>GitHub Large Code Analysis (ghlca) by brainwater</title>
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="javascripts/respond.js"></script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <!--[if lt IE 8]>
-    <link rel="stylesheet" href="stylesheets/ie.css">
-    <![endif]-->
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="GitHub Large Code Analysis (ghlca) : What can be discovered if you download thousands of GitHub repositories?">
 
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>GitHub Large Code Analysis (ghlca)</title>
   </head>
+
   <body>
-      <div id="header">
-        <nav>
-          <li class="fork"><a href="https://github.com/brainwater/ghlca">View On GitHub</a></li>
-          <li class="downloads"><a href="https://github.com/brainwater/ghlca/zipball/master">ZIP</a></li>
-          <li class="downloads"><a href="https://github.com/brainwater/ghlca/tarball/master">TAR</a></li>
-          <li class="title">DOWNLOADS</li>
-        </nav>
-      </div><!-- end header -->
 
-    <div class="wrapper">
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/brainwater/ghlca">View on GitHub</a>
 
-      <section>
-        <div id="title">
-          <h1>GitHub Large Code Analysis (ghlca)</h1>
-          <p>What can be discovered if you download thousands of GitHub repositories?</p>
-          <hr>
-          <span class="credits left">Project maintained by <a href="https://github.com/brainwater">brainwater</a></span>
-          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
-        </div>
+          <h1 id="project_title">GitHub Large Code Analysis (ghlca)</h1>
+          <h2 id="project_tagline">What can be discovered if you download thousands of GitHub repositories?</h2>
 
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/brainwater/ghlca/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/brainwater/ghlca/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
         <h3>
 <a name="motivation" class="anchor" href="#motivation"><span class="octicon octicon-link"></span></a>Motivation</h3>
 
 <p>My motivation for starting the GitHub Large Code Analysis project was not in fact the <a href="https://github.com/blog/1864-third-annual-github-data-challenge">Third Annual GitHub Data Challenge</a>, instead around January 2014 I was interested in doing some sort of BigData type analysis, however I had almost no idea where to start. I came up with the idea to download a bunch of repositories from GitHub and see what I could find by analyzing  all of that code. Of course, like most of my ideas, I promptly forgot about it after getting really excited about it for a week and then realized it would take real work. Later I was reading <a href="news.ycombinator.com">Hacker News</a> and came across an article about <a href="http://awgn.github.io/cgrep/">Cgrep</a>, which sparked my interest in the ghlca project again. I also came across another article about <a href="http://corte.si/posts/code/devsurvey/">The impact of language choice on github projects</a>, which was very much like part of what I wanted to do in the ghlca project. The final thing which got me working on the ghlca project was when a coworker asked if I had heard about the <a href="https://github.com/blog/1864-third-annual-github-data-challenge">Third Annual GitHub Data Challenge</a>, which finally gave me a deadline.</p>
 
 <h3>
+<a name="getting-started" class="anchor" href="#getting-started"><span class="octicon octicon-link"></span></a>Getting Started</h3>
+
+<p>The first problem that needed solving was to determine which github repositories were the most 'valuable' repositories. I determined three ways of judging the 'value' of a repository using the dataset on Google BigQuery. Either by the most number of watchers, the most number of forks, or the highest value for watchers * forks. For the competition, I simply used about the top 5000 repositories with the most watchers, since I was under a time limit. The following was the code used to get those repositories, which I had found this on StackOverflow (unfortunately, I can't find it anymore).</p>
+
+<pre><code>SELECT
+  *
+FROM [publicdata:samples.github_timeline] a
+JOIN EACH
+  (
+     SELECT MAX(created_at) as max_created, repository_url 
+     FROM [publicdata:samples.github_timeline]
+     GROUP EACH BY repository_url
+  ) b
+  ON 
+  b.max_created = a.created_at and
+  b.repository_url = a.repository_url
+ORDER BY repository_watchers desc
+LIMIT 5000
+</code></pre>
+
+<h3>
+<a name="observations-of-note" class="anchor" href="#observations-of-note"><span class="octicon octicon-link"></span></a>Observations of Note</h3>
+
+<p>While doing the initial development of my word counting python scripts, I used the <a href="https://github.com/apache/cassandra">Apache Cassandra</a> repository, and discovered that the number of left and right parenthesis did not match, instead there were more left parenthesis than right. This could be explained by frown faces in the comments, however there were also more left curly braces '{' than right curly braces '}', and more left brackets '[' than right brackets ']'.</p>
+
+<h3>
+<a name="character-frequency" class="anchor" href="#character-frequency"><span class="octicon octicon-link"></span></a>Character frequency:</h3>
+
+<h3>
 <a name="acknowledgements" class="anchor" href="#acknowledgements"><span class="octicon octicon-link"></span></a>Acknowledgements</h3>
 
 <p>I would like to thank Aldo Cortesi (<a href="https://github.com/cortesi" class="user-mention">@cortesi</a>) for his post on his work downloading a bunch of github repositories at <a href="http://corte.si/posts/code/devsurvey/">The impact of language choice on github projects</a>.</p>
       </section>
-
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">GitHub Large Code Analysis (ghlca) maintained by <a href="https://github.com/brainwater">brainwater</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
     
+
   </body>
 </html>
