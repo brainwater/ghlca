@@ -34,6 +34,7 @@ def wcforlang(fcoll, lang=None):
                 failcntr += 1
         if cntr % 10000 == 0:
             print(cntr)
+            sys.stdout.flush()
     return wc, cntr, failcntr, sloccnt, loccnt
 
 
