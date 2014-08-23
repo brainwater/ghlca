@@ -49,13 +49,13 @@ def popwordcounts(fcoll):
     collchar = pymongo.collection.Collection(ghlca.db, prefix + "char")
     collword = pymongo.collection.Collection(ghlca.db, prefix + "word")
     collwhite = pymongo.collection.Collection(ghlca.db, prefix + "white")
-    for word, count in wclang.charcount.most_common(10000000):
+    for word, count in wc.charcount.most_common(10000000):
         collchar.save({ "_id": word, "w": word, "c": count })
     print("Saving total words")
-    for word, count in wclang.wordcountwordchars.most_common(10000000):
+    for word, count in wc.wordcountwordchars.most_common(10000000):
         collword.save({ "_id": word, "w": word, "c": count })
     print("Saving total whites")
-    for word, count in wclang.wordcountwhitespace.most_common(10000000):
+    for word, count in wc.wordcountwhitespace.most_common(10000000):
         collwhite.save({ "_id": word, "w": word, "c": count })
     print("Done with total whites")
     totchars = sum(wc.charcount.values())
