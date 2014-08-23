@@ -68,10 +68,29 @@ LIMIT 5000
 <p>TODO: List of the most common languages by file count, character count, sloc, and possibly loc.</p>
 
 <h2>
-<a name="character-frequency" class="anchor" href="#character-frequency"><span class="octicon octicon-link"></span></a>Character Frequency</h2>
+<a name="word-and-character-frequency" class="anchor" href="#word-and-character-frequency"><span class="octicon octicon-link"></span></a>Word and Character Frequency</h2>
+
+<p>For the GitHub competition, I decided to focus on word and character counts of the files. I found some very interesting results from this data.
+One of the issues I ran into was determining how to count 'words'. Following the literature only for how to count words in python, the python <a href="https://docs.python.org/3.4/library/collections.html#collections.Counter">Counter</a> was used after the text had been split into an array of words using <code>text.split()</code>. I determined that this caused some unexpected complications when dealing with code due to how source code is parsed, for example that curly braces and such can sometimes be separated with whitespace from a variable, and sometimes not. With some more research, I determined that I should also use the regex word character class by running <code>re.split("[\W]+", text)</code> to split the text into words. I also counted the characters since I determined that it may be useful after I saw a mismatch in the number of left and right curly brackets when counting words with <code>text.split()</code>, and realized I would have to do a character count to determine if there was a mismatch.</p>
+
+<h3>
+<a name="character-frequency" class="anchor" href="#character-frequency"><span class="octicon octicon-link"></span></a>Character Frequency</h3>
 
 <p>TODO: Graph of most common characters
-TODO: Graph of characters most specific to each of the most common languages</p>
+TODO: Graphs of characters most specific to each of the most common languages</p>
+
+<h3>
+<a name="word-frequency" class="anchor" href="#word-frequency"><span class="octicon octicon-link"></span></a>Word Frequency</h3>
+
+<p>TODO: Graph of most common words
+TODO: Graphs of words most specific to each of the most common languages</p>
+
+<h3>
+<a name="whitespace-separated-word-frequency" class="anchor" href="#whitespace-separated-word-frequency"><span class="octicon octicon-link"></span></a>Whitespace Separated Word Frequency</h3>
+
+<p>I also did word counts using the words produced by calling text.split() against the text of a file, however it produced the least valuable data of each of character frequency and words defined by the word character class in regex. However here are some graphs of that data.
+TODO: Graph of most common whitespace separated words
+TODO: Graphs of whitespace separated words specific to each of the most common languages</p>
 
 <h2>
 <a name="mismatched-brackets" class="anchor" href="#mismatched-brackets"><span class="octicon octicon-link"></span></a>Mismatched Brackets</h2>
@@ -104,7 +123,7 @@ TODO: Insert a link to a file with mismatched parentheses from apache cassandra<
 <h2>
 <a name="bugs-encountered" class="anchor" href="#bugs-encountered"><span class="octicon octicon-link"></span></a>Bugs Encountered</h2>
 
-<p>I encountered quite a few bugs in the software I was using, from bugs in python, to bugs in the github-linguist library for determining the language of source code files. I will be submitting bug reports for github linguist and will likely do some work on fixing them, since it would be a great way for me to contribute to an open source application in a meaningful way. In python I encountered some segfaults (so far I have had python segfault on my twice) but am unable to reproduce the segfault consistently. I also encountered issues while reading source code files with unicode, since many source files have invalid unicode characters. I would ilke a way to read a file as text, but to be able to either skip the characters that are invalid unicode, or to treat them in some special way. I believe most of these files were for tests, and some of them were for testing what happens on invalid input.</p>
+<p>I encountered quite a few bugs in the software I was using, from bugs in python, to bugs in the github-linguist library for determining the language of source code files. I will be submitting bug reports for github linguist and will likely do some work on fixing them, since it would be a great way for me to contribute to an open source application in a meaningful way. In python I encountered some segfaults (so far I have had python segfault 3 times) but am unable to reproduce the segfault consistently. I also encountered issues while reading source code files with unicode, since many source files have invalid unicode characters. I would ilke a way to read a file as text, but to be able to either skip the characters that are invalid unicode, or to treat them in some special way. I believe most of these files were for tests, and some of them were for testing what happens on invalid input.</p>
 
 <h3>
 <a name="acknowledgements" class="anchor" href="#acknowledgements"><span class="octicon octicon-link"></span></a>Acknowledgements</h3>
