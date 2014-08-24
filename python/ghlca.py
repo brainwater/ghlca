@@ -37,9 +37,25 @@ langwhiteprefix = langprefix + "white_"
 def testifall(lang):
     return (not (lang == "All Languages")) and (not (lang == "All Languages 2"))
 
+# Returns the entry from the languages collection on the given language
+def getlanginfo(lang):
+    return langcoll.find_one({ "_id": lang })
+
+# Returns the char count collection for the given language
+def getlangchars(lang):
+    return db[langcharprefix + lang]
+def getlangwords(lang):
+    return db[langwordprefix + lang]
+def getlangwhites(lang):
+    return db[langwhiteprefix + lang]
+
 langschars = [db[langcharprefix + lang["language"]] for lang in langcoll.find() if testifall(lang["language"])]
 langswords = [db[langwordprefix + lang["language"]] for lang in langcoll.find() if testifall(lang["language"])]
 langswhites = [db[langwhiteprefix + lang["language"]] for lang in langcoll.find() if testifall(lang["language"])]
+
+langsinfo = [lang for lang in langcoll.find() if testifall(lang["language"])]
+
+totalinfo = langcoll.find_one({ "_id": "All Languages 2" })
 
 # Total words collections
 totprefix = "wordcounts_wtch_10_total_"

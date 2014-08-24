@@ -1,17 +1,18 @@
 import ghlca
 
-totalprefix = "wordcounts_wtch_7_total_"
-totchar = totalprefix + "char"
-totword = totalprefix + "word"
-totwhite = totalprefix + "white"
+#totalprefix = "wordcounts_wtch_7_total_"
+#totchar = totalprefix + "char"
+#totword = totalprefix + "word"
+#totwhite = totalprefix + "white"
 
-tchar = ghlca.db[totchar]
-tword = ghlca.db[totword]
-twhite = ghlca.db[totwhite]
+#tchar = ghlca.db[totchar]
+#tword = ghlca.db[totword]
+#twhite = ghlca.db[totwhite]
 
 langs = ghlca.db["languages"]
 
-alllang = langs.find_one({"_id": "All Languages"})
+#alllang = langs.find_one({"_id": "All Languages 2"})
+alllang = ghlca.totalinfo
 
 tcchar = alllang["charcount"]
 tcword = alllang["wordcount"]
@@ -21,9 +22,7 @@ tcsloc = alllang["sloc"]
 tcloc = alllang["loc"]
 
 def poplangratio():
-    for lang in langs.find():
-        if lang["_id"] == "All Languages":
-            continue
+    for lang in ghlca.langsinfo:
         language = lang["language"]
         lcchar = lang["charcount"]
         lcword = lang["wordcount"]
@@ -48,19 +47,55 @@ def poplangratio():
 
         langs.save(lang)
 
-# Populates the word ratios under "r" in the entries of wordcoll, by comparing them against the entries in totcoll
-def popwordratio(wordcoll, totcoll):
+# Populates the word ratios under "r" in the entries of wordcoll, by comparing them against the lang info
+def popwordratio(wordcoll, count):
     print(wordcoll.name)
     for word in wordcoll.find():
         wc = word["c"]
-        tw = totcoll.find_one({ "_id": word["w"]})
-        if tw == None:
+        wr = float(wc) / float(count)
+        word["r"] = wr
+        wordcoll.save(word)
+
+# Needs the "r" to be populated already
+def popwordratiototal(wordcoll, totcoll):
+    for word in wordcoll.find():
+        wr = word["r"]
+        totword = totcoll.find_one({ "_id": word["w"] })
+        if None == totword:
             print("Unable to find word " + word["w"])
+            continue
+        totalratio = totword["r"]
+        tr = float(wr) / float(totalratio)
+        word["tr"] = tr
+        wordcoll.save(word)
+        
 
 
-for coll in ghlca.langschars:
-    popwordratio(coll, tchar)
-    break
+# "r" is the ratio of the occurrence to the total number for that language
+# "tr" is the ratio of the "r" of that to the "r" of all of the languages for that word
+def popratios():
+    popwordratio(ghlca.totalchars, ghlca.totalinfo["charcount"])
+    popwordratio(ghlca.totalwords, ghlca.totalinfo["wordcount"])
+    popwordratio(ghlca.totalwhites, ghlca.totalinfo["whitecount"])
+    for langinfo in ghlca.langsinfo:
+        lang = langinfo["language"]
+        print(lang)
+        lchars = ghlca.getlangchars(lang)
+        lwords = ghlca.getlangwords(lang)
+        lwhites = ghlca.getlangwhites(lang)
+        popwordratio(lchars, langinfo["charcount"])
+        popwordratio(lwords, langinfo["wordcount"])
+        popwordratio(lwhites, langinfo["whitecount"])
+        popwordratiototal(lchars, ghlca.totalchars)
+        popwordratiototal(lwords, ghlca.totalwords)
+        popwordratiototal(lwhites, ghlca.totalwhites)
+
+poplangratio()
+popratios()
+
+
+#for coll in ghlca.langschars:
+#    popwordratio(coll, ghlca.totalchars)
 #for coll in ghlca.langswords:
 #    popwordratio(coll, tword)
 #for coll in ghlca.langswhites:
