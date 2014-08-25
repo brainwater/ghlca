@@ -1,0 +1,4 @@
+github3.py==0.9.1
+pymongo==2.7.2
+requests==2.3.0
+uritemplate.py==0.3.0

@@ -52,17 +52,29 @@ def popwordratio(wordcoll, count):
     print(wordcoll.name)
     for word in wordcoll.find():
         wc = word["c"]
+        if len(word["_id"]) > 1024 or len(word["w"]) > 1024:
+            print("Skipping superlong key")
+            continue
         wr = float(wc) / float(count)
         word["r"] = wr
         wordcoll.save(word)
 
 # Needs the "r" to be populated already
 def popwordratiototal(wordcoll, totcoll):
+    print(wordcoll.name)
     for word in wordcoll.find():
+        if len(word["_id"]) > 1024 or len(word["w"]) > 1024:
+            print("Skipping superlong key")
+            continue
+        if "r" not in word:
+            print("No ratio found")
+            continue
         wr = word["r"]
         totword = totcoll.find_one({ "_id": word["w"] })
         if None == totword:
-            print("Unable to find word " + word["w"])
+            continue
+        if "r" not in totword:
+            print("No ratio found in total")
             continue
         totalratio = totword["r"]
         tr = float(wr) / float(totalratio)
@@ -74,9 +86,9 @@ def popwordratiototal(wordcoll, totcoll):
 # "r" is the ratio of the occurrence to the total number for that language
 # "tr" is the ratio of the "r" of that to the "r" of all of the languages for that word
 def popratios():
-    popwordratio(ghlca.totalchars, ghlca.totalinfo["charcount"])
-    popwordratio(ghlca.totalwords, ghlca.totalinfo["wordcount"])
-    popwordratio(ghlca.totalwhites, ghlca.totalinfo["whitecount"])
+    #popwordratio(ghlca.totalchars, ghlca.totalinfo["charcount"])
+    #popwordratio(ghlca.totalwords, ghlca.totalinfo["wordcount"])
+    #popwordratio(ghlca.totalwhites, ghlca.totalinfo["whitecount"])
     for langinfo in ghlca.langsinfo:
         lang = langinfo["language"]
         print(lang)
